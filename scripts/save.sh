@@ -98,10 +98,15 @@ _save_command_strategy_file() {
 	local save_command_strategy="$(get_tmux_option "$save_command_strategy_option" "$default_save_command_strategy")"
 	local strategy_file="$CURRENT_DIR/../save_command_strategies/${save_command_strategy}.sh"
 	local default_strategy_file="$CURRENT_DIR/../save_command_strategies/${default_save_command_strategy}.sh"
-	if [ -e "$strategy_file" ]; then # strategy file exists?
+	if [ -x "$strategy_file" ]; then # strategy file exists?
 		echo "$strategy_file"
 	else
-		echo "$default_strategy_file"
+		local cmd=$(command -v "${save_command_strategy}")
+		if [ -x "$cmd" ]; then
+			echo "$cmd"
+		else
+			echo "$default_strategy_file"
+		fi
 	fi
 }
 
